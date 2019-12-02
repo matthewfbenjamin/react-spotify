@@ -1,8 +1,7 @@
-import React from "react"
-import "./Player.css"
+import React from 'react'
+import './Player.css'
 
 const Player = props => {
-  console.log(props)
   const backgroundStyles = {
     backgroundImage:`url(${
       props.item.album.images[0].url

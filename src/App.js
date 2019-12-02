@@ -1,9 +1,11 @@
-import React, { Component, useEffect, useState } from "react"
-import { authEndpoint, clientId, redirectUri, scopes } from "./config"
-import hash from "./hash"
-import Player from "./Player"
-import logo from "./logo.svg"
-import "./App.css"
+import React, { useEffect, useState } from 'react'
+import { authEndpoint, clientId, redirectUri, scopes } from './config'
+import { Provider } from 'react-redux'
+
+import store from './redux/store'
+import hash from './hash'
+import Player from './Player'
+import './App.css'
 
 const App = () => {
   const [token, setToken] = useState(null)
@@ -47,28 +49,29 @@ const App = () => {
   }, [token])
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        {!token && (
-          <a
-            className="btn btn--loginApp-link"
-            href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
-              "%20"
-            )}&response_type=token&show_dialog=true`}
-          >
-            Login to Spotify
-          </a>
-        )}
-        {token && (
-          <Player
-            item={item}
-            is_playing={isPlaying}
-            progress_ms={progress}
-          />
-        )}
-      </header>
-    </div>
+    <Provider store={store}>
+      <div className="App">
+        <header className="App-header">
+          {!token && (
+            <a
+              className="btn btn--loginApp-link"
+              href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
+                "%20"
+              )}&response_type=token&show_dialog=true`}
+            >
+              Login to Spotify
+            </a>
+          )}
+          {token && (
+            <Player
+              item={item}
+              is_playing={isPlaying}
+              progress_ms={progress}
+            />
+          )}
+        </header>
+      </div>
+    </Provider>
   )
 }
 
