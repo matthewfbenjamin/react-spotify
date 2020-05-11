@@ -14,101 +14,83 @@ const Home = () => {
   const [localMe, setLocalMe] = useState(null)
   const accessToken = getPersistedState(ACCESS_TOKEN)
 
+  const spotifyApiInstance = axios.create({
+    baseURL: 'https://api.spotify.com/v1',
+    headers: { Authorization: `Bearer ${accessToken}` }
+  });
+
   useEffect(() => {
     const getMe = async () => {
       try {
-        const me = await axios.get('https://api.spotify.com/v1/me', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
-        })
-        setPersistedState(ME, me)
-        setLocalMe(me)
+        const { data } = await spotifyApiInstance.get('/me')
+        setPersistedState(ME, data)
+        setLocalMe(data)
       } catch (error) {
         setShouldReroute(true)
       }
     }
-  }, [])
-  /*
-  useEffect(() => {
-    const getPlaylists = async () => {
-      try {
-        setPlaylistState({ ...playlistState, isLoading: true })
-        const playlists = await axios.get('https://api.spotify.com/v1/me/playlists', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
-        })
-        if (playlists.data && playlists.data.items) setPlaylistState({ isLoading: false, didLoad: true, playlists: playlists.data.items, e: null })
-        else setShouldReroute(true)
-      } catch (e) {
-        setPlaylistState({ isLoading: false, didLoad: true, error: e, playlists: [] })
-        setShouldReroute(true)
-      }
-    }
-    // getPlaylists()
-    // setPlaylistState({ ...playlistState, playlists: playlistsExample.items })
-  }, [accessToken, playlistState])
-  */
+
+    const persistedMe = getPersistedState(ME)
+    if (!persistedMe) getMe()
+    else setLocalMe(persistedMe)
+  }, [ME, accessToken, getPersistedState, setPersistedState, spotifyApiInstance])
 
   const removePodcastsFromDD = async () => {
     try {
       setDailyDriveState({ ...dailyDriveState, isLoading: true })
       // GET THE USER'S DAILY DRIVE (Only works for me, now)
       // TODO: Update for everyone
-      const dailyDriveTrackList = await axios.get(`https://api.spotify.com/v1/playlists/${YOUR_DAILY_DRIVE_ID}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
-      })
-
+      const dailyDriveTrackList = await spotifyApiInstance.get(`/playlists/${YOUR_DAILY_DRIVE_ID}`)
       if (
-        dailyDriveTrackList.tracks &&
-        dailyDriveTrackList.tracks.items &&
-        dailyDriveTrackList.tracks.items.length > 0 &&
+        dailyDriveTrackList.data &&
+        dailyDriveTrackList.data.tracks &&
+        dailyDriveTrackList.data.tracks.items &&
+        dailyDriveTrackList.data.tracks.items.length > 0 &&
         localMe
       ) {
         // Get all the playlists and see if the DAILY_DRIVE_OVERWRITE_NAME exists already
-        const playlists = await axios.get('https://api.spotify.com/v1/me/playlists', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
-        })
+        const playlists = await spotifyApiInstance.get('/me/playlists')
 
         let existingPlaylistId
         playlists.data.items.forEach((playlistItem) => {
-          if (playlistItem === DAILY_DRIVE_OVERWRITE_NAME) existingPlaylistId = playlistItem.id
+          if (playlistItem.name === DAILY_DRIVE_OVERWRITE_NAME) existingPlaylistId = playlistItem.id
         })
 
-        const trackUris = dailyDriveTrackList.tracks.items.reduce((acc, trackItem, idx) => {
-          if (idx > 0 && trackItem.track.type === 'track') acc.concat(trackItem.uri)
+        const trackUris = dailyDriveTrackList.data.tracks.items.reduce((acc, trackItem, idx) => {
+          if (idx >= 0 && trackItem.track.type === 'track') acc.push(trackItem.track.uri)
           return acc
         }, [])
-
+        
         if (existingPlaylistId) {
           // Replace items in the current playlist with the trackUris
-          const jsonTrackUris = JSON.stringify({uris: trackUris })
-          console.log(jsonTrackUris)
-          axios.put(`https://api.spotify.com/v1/playlists/${existingPlaylistId}/tracks`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": 'application/json',
-            },
-            data: jsonTrackUris,
-          })
+          await replaceItemsInPlaylist(existingPlaylistId, trackUris)
         } else {
-          // TODO: Create a new playlist and add the track URI's
+          // Create a new playlist and add the track URI's
+          const { data } = await spotifyApiInstance.post(`/users/${localMe.id}/playlists`, {
+            name: DAILY_DRIVE_OVERWRITE_NAME,
+            public: false,
+            collaborative: false,
+          })
+          await addItemsToPlaylist(data.id, trackUris)
         }
-
-        axios.post(`https://api.spotify.com/v1/users/${localMe.id}/playlists`, {
-          firstName: 'Fred',
-          lastName: 'Flintstone'
-        })
-        console.log(trackUris)
       }
     } catch (error) {
+      // TODO: Signout if access token no longer valid
+      // if (badAccessToken) setShouldReroute(true)
       setDailyDriveState({ isLoading: false, didLoad: true, error })
     }
+  }
+
+  const addItemsToPlaylist = async (existingPlaylistId, trackUris) => {
+    await spotifyApiInstance.post(`/playlists/${existingPlaylistId}/tracks`, {
+      uris: trackUris,
+    })
+  }
+
+  const replaceItemsInPlaylist = async (existingPlaylistId, trackUris) => {
+    await spotifyApiInstance.put(`/playlists/${existingPlaylistId}/tracks`, {
+      uris: trackUris,
+    })
   }
 
   if (!accessToken || shouldReroute) return <Redirect to="/login" />
@@ -122,9 +104,11 @@ const Home = () => {
       justifyContent: 'space-between',
     }}>
       <div>
-        <Button variant="success" onClick={removePodcastsFromDD}>
-          Remove Podcasts from Daily Drive
-        </Button>
+        {localMe &&
+          <Button variant="success" onClick={removePodcastsFromDD}>
+            Remove Podcasts from Daily Drive
+          </Button>
+        }
       </div>
       <div>
         <Button variant="danger" onClick={() => setShouldReroute(true)}>
