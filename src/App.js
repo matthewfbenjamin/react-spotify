@@ -1,16 +1,15 @@
 import React from 'react'
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
+import { HashRouter, Switch, Route, Redirect } from 'react-router-dom'
 
 import { AppProvider } from './AppContext'
 import { Login } from './Login'
 import { Home } from './Home'
 import './App.css'
 
-
 const App = () => {
   return (
     <AppProvider>
-      <BrowserRouter>
+      <HashRouter>
         <Switch>
           <Route path="/login">
             <Login />
@@ -23,7 +22,7 @@ const App = () => {
             <Redirect to="/login" />
           </Route>
         </Switch>
-      </BrowserRouter>
+      </HashRouter>
     </AppProvider>
   )
 }

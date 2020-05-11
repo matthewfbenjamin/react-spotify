@@ -1,4 +1,4 @@
-const redirectUri = 'http://localhost:3000'
+const redirectUri = process.env.REACT_APP_STAGE === 'dev' ? 'http://localhost:3000/react-spotify' : 'https://matthewfbenjamin.github.io/react-spotify' // https://serverless-stack.com/chapters/environments-in-create-react-app.html
 const clientId = '7719deb8aec14035bd2d6d603b240f78'
 const clientSecret = '6773e4e378fa4a1b87e3e8c4f8c85da4'
 

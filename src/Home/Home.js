@@ -7,7 +7,7 @@ import { AppContext } from '../AppContext'
 import { YOUR_DAILY_DRIVE_ID, DAILY_DRIVE_OVERWRITE_NAME } from '../SpotifyCredientials'
 
 const Home = () => {
-  const { APP_STATE_VALUES: { ACCESS_TOKEN, ME }, getPersistedState, setPersistedState } = useContext(AppContext)
+  const { APP_STATE_VALUES: { ACCESS_TOKEN, ME }, getPersistedState, setPersistedState, clearPersistedState } = useContext(AppContext)
   const [shouldReroute, setShouldReroute] = useState(false)
   // const [playlistState, setPlaylistState] = useState({ isLoading: false, didLoad: false, playlists: [] })
   const [dailyDriveState, setDailyDriveState] = useState({ isLoading: false, didLoad: false })
@@ -22,7 +22,11 @@ const Home = () => {
   useEffect(() => {
     const getMe = async () => {
       try {
-        const { data } = await spotifyApiInstance.get('/me')
+        const { data } = await axios.get('https://api.spotify.com/v1/me', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        })
         setPersistedState(ME, data)
         setLocalMe(data)
       } catch (error) {
@@ -33,7 +37,7 @@ const Home = () => {
     const persistedMe = getPersistedState(ME)
     if (!persistedMe) getMe()
     else setLocalMe(persistedMe)
-  }, [ME, accessToken, getPersistedState, setPersistedState, spotifyApiInstance])
+  }, [ME, accessToken, getPersistedState, setPersistedState])
 
   const removePodcastsFromDD = async () => {
     try {
@@ -111,7 +115,10 @@ const Home = () => {
         }
       </div>
       <div>
-        <Button variant="danger" onClick={() => setShouldReroute(true)}>
+        <Button variant="danger" onClick={() => {
+            clearPersistedState()
+            setShouldReroute(true)
+          }}>
           Logout
         </Button>
       </div>

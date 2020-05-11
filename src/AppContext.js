@@ -32,15 +32,18 @@ export const AppProvider = ({ children }) => {
         return localStorage.getItem(state.key)
       }
     } catch {
-      localStorage.clear()
+      clearPersistedState()
     }
   }
+
+  const clearPersistedState = () => localStorage.clear()
 
   return (
     <AppContext.Provider value={{
       APP_STATE_VALUES,
       getPersistedState,
       setPersistedState,
+      clearPersistedState,
     }}>
       {children}
     </AppContext.Provider>
