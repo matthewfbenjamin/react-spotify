@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "be789a9affcbf407056e31feb86f5597",
+    "revision": "38b454b05312866da37063798e42ca0a",
     "url": "/react-spotify/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/react-spotify/static/css/2.de424728.chunk.css"
   },
   {
-    "revision": "b2e15b5d9d21997e5971",
+    "revision": "72ff959fe6e3b435ffcd",
     "url": "/react-spotify/static/css/main.5f361e03.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/react-spotify/static/js/2.d7f55a65.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "b2e15b5d9d21997e5971",
-    "url": "/react-spotify/static/js/main.57b43c1f.chunk.js"
+    "revision": "72ff959fe6e3b435ffcd",
+    "url": "/react-spotify/static/js/main.36199dc5.chunk.js"
   },
   {
     "revision": "24220529a90d61197ede",
