@@ -17,7 +17,6 @@ const App = () => {
           <Route path="/home">
             <Home />
           </Route>
-
           <Route path="/">
             <Redirect to="/login" />
           </Route>
