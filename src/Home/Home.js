@@ -3,14 +3,16 @@ import { Redirect } from 'react-router-dom'
 import axios from 'axios'
 import Button from 'react-bootstrap/Button'
 
+import FunctionButton from './FunctionButton'
 import { AppContext } from '../AppContext'
 import { removePodcastsFromDD } from './useDailyDrive'
+import { combineDailyMixes } from './combineDailyMixes'
 
 const Home = () => {
   const { APP_STATE_VALUES: { ACCESS_TOKEN, ME }, getPersistedState, setPersistedState, clearPersistedState } = useContext(AppContext)
   const [shouldReroute, setShouldReroute] = useState(false)
-  // const [playlistState, setPlaylistState] = useState({ isLoading: false, didLoad: false, playlists: [] })
   const [dailyDriveState, setDailyDriveState] = useState({ isLoading: false, didLoad: false, error: null })
+  const [dailyMixState, setDailyMixState] = useState({ isLoading: false, didLoad: false, error: null })
   const [localMe, setLocalMe] = useState(null)
   const accessToken = getPersistedState(ACCESS_TOKEN)
 
@@ -45,24 +47,25 @@ const Home = () => {
       justifyContent: 'space-between',
       alignItems: 'center',
     }}>
-      <div>
-        {localMe &&
-          <Button
-            variant="success"
-            onClick={dailyDriveState.isLoading ? null : () => removePodcastsFromDD(accessToken, setDailyDriveState, dailyDriveState, localMe)}
-            disabled={dailyDriveState.isLoading}
-          >
-            {dailyDriveState.isLoading ? 'Removing…' : 'Remove Podcasts from Daily Drive'}
-          </Button>
-        }
-        {dailyDriveState.error &&
-          <div
-            style={{ marginTop: 8, color: 'red' }}
-          >
-            {dailyDriveState.error.message || dailyDriveState.error}
-          </div>
-        }
-      </div>
+      {localMe && (
+        <>
+          <FunctionButton
+            isLoading={dailyDriveState.isLoading}
+            onClick={() => removePodcastsFromDD(accessToken, setDailyDriveState, dailyDriveState, localMe)}
+            loadingText="Removing..."
+            defaultText="Remove Podcasts from Daily Drive"
+            error={dailyDriveState.error}
+          />
+          <FunctionButton
+            isLoading={dailyMixState.isLoading}
+            onClick={() => combineDailyMixes(accessToken, setDailyMixState, dailyMixState, localMe)}
+            loadingText="Combining..."
+            defaultText="Combine all Daily Mixes"
+            error={dailyMixState.error}
+          />
+        </>
+      )
+      }
       <div>
         <Button variant="danger" onClick={() => {
             clearPersistedState()

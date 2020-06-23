@@ -19,6 +19,24 @@ const hash = window.location.hash
 const YOUR_DAILY_DRIVE_ID = '37i9dQZF1EfMJO4KCTeoFL'
 const DAILY_DRIVE_OVERWRITE_NAME = 'Daily Drive (No Podcasts)'
 
+const DAILY_MIX_OVERWRITE_NAME = 'Daily Mixes (Combined)'
+
+const DAILY_MIX_1 = '37i9dQZF1E396S6lMfWgMr'
+const DAILY_MIX_2 = '37i9dQZF1E37668qIGJAPy'
+const DAILY_MIX_3 = '37i9dQZF1E38kE5eusdyAj'
+const DAILY_MIX_4 = '37i9dQZF1E39PcKoUK0RQ5'
+const DAILY_MIX_5 = '37i9dQZF1E38F06FDwNi27'
+const DAILY_MIX_6 = '37i9dQZF1E38FbWIM4PDxJ'
+
+export const DAILY_MIX_IDS = [
+  DAILY_MIX_1,
+  DAILY_MIX_2,
+  DAILY_MIX_3,
+  DAILY_MIX_4,
+  DAILY_MIX_5,
+  DAILY_MIX_6,
+]
+
 export {
   redirectUri,
   clientId,
@@ -27,4 +45,5 @@ export {
   hash,
   YOUR_DAILY_DRIVE_ID,
   DAILY_DRIVE_OVERWRITE_NAME,
+  DAILY_MIX_OVERWRITE_NAME,
 }
