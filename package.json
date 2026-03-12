@@ -42,5 +42,11 @@
   "devDependencies": {
     "gh-pages": "^6.3.0"
   },
-  "homepage": "http://matthewfbenjamin.github.io/react-spotify"
+  "gh-pages": {
+    "user": {
+      "name": "matthewfbenjamin",
+      "email": "mbenjamin618@gmail.com"
+    }
+  },
+  "homepage": "https://matthewfbenjamin.github.io/react-spotify"
 }
