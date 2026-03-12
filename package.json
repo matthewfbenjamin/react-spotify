@@ -3,17 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "axios": "^0.19.2",
-    "bootstrap": "^4.4.1",
-    "http-proxy-middleware": "^1.0.3",
-    "react": "^16.13.1",
-    "react-bootstrap": "^1.0.0",
-    "react-dom": "^16.13.1",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "3.4.1"
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "axios": "^1.13.6",
+    "bootstrap": "^5.3.8",
+    "http-proxy-middleware": "^3.0.5",
+    "react": "^19.2.4",
+    "react-bootstrap": "^2.10.10",
+    "react-dom": "^19.2.4",
+    "react-router-dom": "^7.13.1",
+    "react-scripts": "5.0.1"
   },
   "scripts": {
     "start": "REACT_APP_STAGE=dev react-scripts start",
@@ -40,7 +40,7 @@
   },
   "proxy": "http://localhost:5000",
   "devDependencies": {
-    "gh-pages": "^2.2.0"
+    "gh-pages": "^6.3.0"
   },
   "homepage": "http://matthewfbenjamin.github.io/react-spotify"
 }

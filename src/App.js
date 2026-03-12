@@ -1,5 +1,5 @@
 import React from 'react'
-import { HashRouter, Switch, Route, Redirect } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 
 import { AppProvider } from './AppContext'
 import { Login } from './Login'
@@ -10,17 +10,11 @@ const App = () => {
   return (
     <AppProvider>
       <HashRouter>
-        <Switch>
-          <Route path="/login">
-            <Login />
-          </Route>
-          <Route path="/home">
-            <Home />
-          </Route>
-          <Route path="/">
-            <Redirect to="/login" />
-          </Route>
-        </Switch>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
+        </Routes>
       </HashRouter>
     </AppProvider>
   )

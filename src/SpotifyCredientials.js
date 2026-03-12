@@ -1,20 +1,10 @@
-const redirectUri = process.env.REACT_APP_STAGE === 'dev' ? 'http://localhost:3000/react-spotify' : 'https://matthewfbenjamin.github.io/react-spotify' // https://serverless-stack.com/chapters/environments-in-create-react-app.html
+const redirectUri = process.env.REACT_APP_STAGE === 'dev' 
+  ? 'http://127.0.0.1:3000/react-spotify' 
+  : 'https://matthewfbenjamin.github.io/react-spotify'
 const clientId = '7719deb8aec14035bd2d6d603b240f78'
 const clientSecret = '6773e4e378fa4a1b87e3e8c4f8c85da4'
 
 const scopes = ['user-read-private', 'user-read-email', 'playlist-read-collaborative', 'playlist-modify-public', 'playlist-read-private', 'playlist-modify-private']
-
-// Get the hash of the url
-const hash = window.location.hash
-  .substring(1)
-  .split("&")
-  .reduce(function (initial, item) {
-    if (item) {
-      var parts = item.split("=");
-      initial[parts[0]] = decodeURIComponent(parts[1]);
-    }
-    return initial;
-  }, {})
 
 const YOUR_DAILY_DRIVE_ID = '37i9dQZF1EfMJO4KCTeoFL'
 const DAILY_DRIVE_OVERWRITE_NAME = 'Daily Drive (No Podcasts)'
@@ -42,7 +32,6 @@ export {
   clientId,
   clientSecret,
   scopes,
-  hash,
   YOUR_DAILY_DRIVE_ID,
   DAILY_DRIVE_OVERWRITE_NAME,
   DAILY_MIX_OVERWRITE_NAME,
